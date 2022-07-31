@@ -13,8 +13,8 @@ export const Searchbar = () => {
         <input
           className={styles.Input}
           type="text"
-          autocomplete="off"
-          autofocus
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
         />
       </form>
