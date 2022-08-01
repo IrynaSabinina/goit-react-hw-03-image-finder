@@ -25,9 +25,15 @@ export class Modal extends Component {
     }
   };
   render() {
+    const { image, close } = this.props;
     return createPortal(
       <div className={styles.Overlay} onClick={this.hanslClockOnOverlay}>
-        <div className={styles.Modal}>{this.props.children}</div>
+        <div className={styles.Modal}>
+          <img src={image.largeImageURL} alt="Picture" />
+          <button type="button" onClick={close}>
+            x
+          </button>
+        </div>
       </div>,
       modalRoot
     );
