@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
+import styles from './Button.module.css';
 
-export const Button = ({ textContent, handleClick }) => {
+export const Button = ({ textContent, onClick }) => {
   return (
-    <button type="button" onClick={handleClick}>
+    <button className={styles.Button} type="button" onClick={onClick}>
       {textContent}
     </button>
   );
@@ -10,5 +11,5 @@ export const Button = ({ textContent, handleClick }) => {
 
 Button.propTypes = {
   textContent: PropTypes.string,
-  handleClick: PropTypes.func,
+  onClick: PropTypes.func,
 };

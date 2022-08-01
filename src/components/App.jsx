@@ -5,40 +5,28 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { mapper } from 'utils/mapper';
 import { Modal } from './Modal/Modal';
-import { Rings } from 'react-loader-spinner';
+import { Loader } from './Loader/Loader';
 import { api } from 'API/api';
 import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
     images: [],
-    image: '',
     loading: false,
+    totalImg: 0,
     page: 1,
+    perPage: 12,
     isShown: false,
     search: '',
+    modalImg: null,
   };
 
-  // componentDidMount() {
-  //   this.setState({ loading: true });
-  //   const images = localStorage.getItem('images');
-  //   if (images) {
-  //     this.setState({ images: JSON.parse(images) });
-  //   }
-  //   this.fetchImages();
-  // setTimeout(() => {
-  //   fetch(
-  //     'https://pixabay.com/api/?key=28362853-f4179f2b0382cbb2305a6e9dc&q=yellow+flowers&image_type=photo=page=12'
-  //   )
-  //     .then(res => res.json())
-  //     .then(images => this.setState({ images }))
-  //     .finally(() => this.setState({ loading: false }));
-  // }, 2000);
-  // }
-
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state.page);
-    if (prevState.page !== this.state.page) {
+    if (prevState.search !== this.state.search && this.state.search !== '') {
+      this.fetchImages();
+      return;
+    }
+    if (prevState.page !== this.state.page && this.state.page !== 1) {
       this.fetchImages();
     }
   }
@@ -48,60 +36,50 @@ export class App extends Component {
     api(this.state.search, this.state.page)
       .then(({ data }) => {
         this.setState(prevs => ({
-          images: [...mapper(data.hits)],
-          totalImg: prevs.total,
-          page: prevs.page + 1,
+          images: [...prevs.images, ...mapper(data.hits)],
+          totalImg: data.total,
         }));
       })
       .finally(() => this.setState({ loading: false }));
   };
 
-  handleOpenModal = img => {
-    console.log(img);
-    this.setState({ image: true });
+  handleModalImg = modalImg => {
+    this.setState({ modalImg: modalImg });
   };
-  handleCloseModal = () => {
-    this.setState({ image: '' });
-  };
-
-  handleClick = () => {
-    this.setState({ isShown: true });
-    this.fetchImages();
+  handleModalClose = () => {
+    this.setState({ modalImg: null });
   };
 
   handleFormSubmit = search => {
-    this.setState({ search: search });
-    this.setState({ isShown: true });
-    this.fetchImages();
-    this.setState({ images: [] });
+    this.setState({ search: search, images: [], isShown: true, page: 1 });
   };
 
   handlerLoadMore = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
-    console.log('ghghghghgfhghg');
+    this.setState(ps => ({ page: ps.page + 1 }));
   };
 
   render() {
-    const { images, image, isShown, loading, search } = this.state;
+    const { images, modalImg, isShown, loading, totalImg } = this.state;
     return (
       <div>
-        {!isShown && <Searchbar onSubmit={this.handleFormSubmit} />}
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        {loading && <Loader />}
 
         {isShown && (
           <>
             <ImageGallery
-              handleOpenModal={this.handleOpenModal}
+              handleModalImg={this.handleModalImg}
               images={images}
-              onDelete={this.onDelete}
             />
-            {loading && <Rings />}
-            <Button
-              textContent="Load More"
-              handlerClick={this.handlerLoadMore}
-            />
+            {totalImg > 12 && (
+              <Button textContent="Load More" onClick={this.handlerLoadMore} />
+            )}
+            {loading && <Loader />}
           </>
         )}
-        {image && <Modal image={image} close={this.handleCloseModal} />}
+        {modalImg && (
+          <Modal largeImageURL={modalImg} close={this.handleModalClose} />
+        )}
         <ToastContainer />
       </div>
     );

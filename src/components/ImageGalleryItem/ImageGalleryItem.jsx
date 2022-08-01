@@ -1,19 +1,26 @@
 import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ webformatURL, handleOpenModal }) => {
+export const ImageGalleryItem = ({
+  webformatURL,
+  largeImageURL,
+  handleModalImg,
+}) => {
   return (
     <li className={styles.ImageGalleryItem}>
       <img
         className={styles.ImageGalleryItemImage}
         src={webformatURL}
         alt="picter"
-        handleOpenModal={handleOpenModal}
+        onClick={() => {
+          handleModalImg(largeImageURL);
+        }}
       />
     </li>
   );
 };
 ImageGalleryItem.propTypes = {
   webformatURL: PropTypes.string.isRequired,
-  handleOpenModal: PropTypes.func,
+  largeImageURL: PropTypes.string.isRequired,
+  handleModalImg: PropTypes.func.isRequired,
 };

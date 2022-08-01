@@ -15,24 +15,27 @@ export class Modal extends Component {
 
   handClickDown = e => {
     if (e.code === 'Escape') {
-      this.props.onClose();
+      this.props.close();
     }
   };
 
-  hanslClockOnOverlay = evt => {
-    if (evt.currentTarget === evt.target) {
-      this.props.onClose();
+  handleClickOnOverlay = evt => {
+    if (evt.target === evt.currentTarget) {
+      this.props.close();
     }
   };
+
   render() {
-    const { image, close } = this.props;
+    const { largeImageURL, close } = this.props;
     return createPortal(
-      <div className={styles.Overlay} onClick={this.hanslClockOnOverlay}>
+      <div className={styles.Overlay} onClick={this.handleClickOnOverlay}>
         <div className={styles.Modal}>
-          <img src={image.largeImageURL} alt="Picture" />
-          <button type="button" onClick={close}>
-            x
-          </button>
+          <img
+            className={styles.modalImg}
+            src={largeImageURL}
+            alt="краса"
+            onClick={close}
+          />
         </div>
       </div>,
       modalRoot

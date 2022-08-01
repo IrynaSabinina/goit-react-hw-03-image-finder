@@ -3,6 +3,5 @@ export const mapper = images => {
     id,
     webformatURL,
     largeImageURL,
-    total,
   }));
 };
