@@ -1,8 +1,12 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import styles from './Searchbar.module.css';
 
 export class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
   state = {
     search: '',
   };
@@ -11,6 +15,7 @@ export class Searchbar extends Component {
   };
   handleSubmit = event => {
     event.preventDefault();
+
     if (this.state.search.trim() === '') {
       return toast.error('заполните поле поиска');
     }

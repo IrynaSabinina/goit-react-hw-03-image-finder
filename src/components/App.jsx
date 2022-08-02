@@ -51,7 +51,11 @@ export class App extends Component {
   };
 
   handleFormSubmit = search => {
-    this.setState({ search: search, images: [], isShown: true, page: 1 });
+    if (search === this.state.search) {
+      return;
+    } else {
+      this.setState({ search: search, images: [], isShown: true, page: 1 });
+    }
   };
 
   handlerLoadMore = () => {
